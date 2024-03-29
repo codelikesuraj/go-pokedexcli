@@ -32,25 +32,31 @@ func startRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		print("pokedexcli> ")
+		fmt.Print("Pokedex > ")
 		scanner.Scan()
-		text := scanner.Text()
+		cleaned := cleanInput(scanner.Text())
 
-		if len(text) == 0 {
+		if len(cleaned) == 0 {
 			continue
 		}
 
-		command, ok := getCommands()[cleanInput(text)[0]]
+		command, ok := getCommands()[cleaned[0]]
 		if ok {
 			command.callback()
 			continue
 		}
 
-		fmt.Println("Invalid command. Type 'help' to show available commands!")
+		invalidCommand()
 	}
 }
 
 func cleanInput(s string) []string {
 	return strings.Fields(strings.ToLower(s))
+}
 
+func invalidCommand() {
+	fmt.Println()
+	fmt.Println("Invalid command!")
+	fmt.Println("Type 'help' to show available commands.")
+	fmt.Println()
 }
