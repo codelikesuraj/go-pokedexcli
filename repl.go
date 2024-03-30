@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -25,10 +26,20 @@ func getCommands() map[string]cliCommand {
 			description: "exit the pokedexcli",
 			callback:    commandExit,
 		},
+		"map": {
+			name:        "map",
+			description: "list location areas",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "list previous location areas",
+			callback:    commandMapB,
+		},
 	}
 }
 
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -41,12 +52,16 @@ func startRepl() {
 		}
 
 		command, ok := getCommands()[cleaned[0]]
-		if ok {
-			command.callback()
+		if !ok {
+			displayError("Invalid command!", true)
 			continue
 		}
 
-		invalidCommand()
+		start := time.Now()
+		if err := command.callback(cfg); err != nil {
+			displayError(err.Error(), false)
+		}
+		fmt.Println("Time:", time.Since(start).Seconds())
 	}
 }
 
@@ -54,9 +69,11 @@ func cleanInput(s string) []string {
 	return strings.Fields(strings.ToLower(s))
 }
 
-func invalidCommand() {
+func displayError(message string, showHint bool) {
 	fmt.Println()
-	fmt.Println("Invalid command!")
-	fmt.Println("Type 'help' to show available commands.")
+	fmt.Println(message)
+	if showHint {
+		fmt.Println("Type 'help' to show available commands.")
+	}
 	fmt.Println()
 }
