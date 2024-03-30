@@ -61,7 +61,7 @@ func startRepl(cfg *config) {
 		if err := command.callback(cfg); err != nil {
 			displayError(err.Error(), false)
 		}
-		fmt.Println("Time:", time.Since(start).Seconds())
+		fmt.Println("Interval:", time.Since(start).Seconds(), "seconds")
 	}
 }
 
