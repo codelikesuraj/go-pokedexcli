@@ -50,6 +50,6 @@ func commandMapB(cfg *config) error {
 func displayLocations(locations []pokeapi.LocationArea) {
 	fmt.Println("Location areas:")
 	for _, loc := range locations {
-		fmt.Printf(" - %s\n", loc.URL)
+		fmt.Printf(" - %s :  %s\n", loc.Name, loc.URL)
 	}
 }
