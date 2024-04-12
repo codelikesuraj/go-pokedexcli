@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -36,6 +36,11 @@ func getCommands() map[string]cliCommand {
 			description: "list previous location areas",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore <location_name>",
+			description: "explore a location",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -58,7 +63,7 @@ func startRepl(cfg *config) {
 		}
 
 		start := time.Now()
-		if err := command.callback(cfg); err != nil {
+		if err := command.callback(cfg, cleaned[1:]...); err != nil {
 			displayError(err.Error(), false)
 		}
 		fmt.Println("Interval:", time.Since(start).Seconds(), "seconds")

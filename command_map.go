@@ -3,11 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/codelikesuraj/pokedexcli/internal/pokeapi"
 )
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, _ ...string) error {
 	resp, err := cfg.pokeapiClient.ListLocations(cfg.nextLocationAreaUrl)
 	if err != nil {
 		return err
@@ -22,7 +23,7 @@ func commandMap(cfg *config) error {
 	return nil
 }
 
-func commandMapB(cfg *config) error {
+func commandMapB(cfg *config, _ ...string) error {
 	if cfg.prevLocationAreaUrl == nil {
 		baseUrl := fmt.Sprintf(
 			"%s%s",
@@ -50,6 +51,10 @@ func commandMapB(cfg *config) error {
 func displayLocations(locations []pokeapi.LocationArea) {
 	fmt.Println("Location areas:")
 	for _, loc := range locations {
-		fmt.Printf(" - %s :  %s\n", loc.Name, loc.URL)
+		fmt.Printf(" - %s (%s)\n", loc.Name, getId(loc.URL))
 	}
+}
+
+func getId(url string) string {
+	return strings.Trim(strings.TrimPrefix(url, *pokeapi.GetBaseURL()+"/location/"), "/")
 }
