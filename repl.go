@@ -26,6 +26,16 @@ func getCommands() map[string]cliCommand {
 			description: "exit the pokedexcli",
 			callback:    commandExit,
 		},
+		"catch": {
+			name:        "catch <pokemon_name>",
+			description: "catch a pokemon",
+			callback:    commandCatch,
+		},
+		"explore": {
+			name:        "explore <location_name>",
+			description: "explore a location",
+			callback:    commandExplore,
+		},
 		"map": {
 			name:        "map",
 			description: "list location areas",
@@ -35,11 +45,6 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "list previous location areas",
 			callback:    commandMapB,
-		},
-		"explore": {
-			name:        "explore <location_name>",
-			description: "explore a location",
-			callback:    commandExplore,
 		},
 	}
 }
